@@ -1,0 +1,14 @@
+node_modules
+.wrangler
+.git
+.github
+worker.js
+wrangler.toml
+package.json
+package-lock.json
+bun.lock
+bun.lockb
+README.md
+deploy.yml
+download
+.assetsignore

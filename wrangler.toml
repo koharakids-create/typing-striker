@@ -1,10 +1,11 @@
 name = "typing-striker"
-main = "src/worker.js"
+main = "worker.js"
 compatibility_date = "2025-06-01"
 
-# public/ の中身を そのまま 配信（HTML・JS・CSS）
+# ファイルが すべて いちばん上に ある 形で 配信します
+# （配信しないファイルは .assetsignore に書いてあります）
 [assets]
-directory = "./public"
+directory = "."
 binding = "ASSETS"
 
 # オンライン対戦の「へや」（1へや = 1 Durable Object）
