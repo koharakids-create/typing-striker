@@ -1,0 +1,22 @@
+name: Deploy
+
+# Cloudflare の Workers Builds（ダッシュボードから GitHub 連携）を使う場合、このファイルは不要です。
+# GitHub Actions でデプロイしたい場合は、下の push のコメントを外してください。
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

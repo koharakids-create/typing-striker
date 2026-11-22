@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>タイピング ストライカー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="app">
+
+  <!-- ========== タイトル ========== -->
+  <section id="scr-title" class="screen active">
+    <div class="title-wrap">
+      <div class="logo-row">
+        <svg class="logo-ball" viewBox="0 0 100 100" aria-hidden="true">
+          <defs><radialGradient id="bshade" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#e9eef5"/><stop offset="1" stop-color="#b9c4d3"/></radialGradient></defs>
+          <circle cx="50" cy="50" r="46" fill="url(#bshade)" stroke="#1c2433" stroke-width="3"/>
+          <polygon points="50,30 66,42 60,61 40,61 34,42" fill="#1c2433"/>
+          <path d="M50 30 L50 8 M66 42 L87 34 M60 61 L73 80 M40 61 L27 80 M34 42 L13 34" stroke="#1c2433" stroke-width="3"/>
+          <path d="M38 6 L50 8 L62 6 M84 22 L87 34 L94 44 M80 74 L73 80 L72 92 M28 92 L27 80 L20 74 M6 44 L13 34 L16 22" stroke="#1c2433" stroke-width="3" fill="none"/>
+        </svg>
+        <h1 class="logo"><span class="l1">タイピング</span><span class="l2">ストライカー</span></h1>
+      </div>
+      <p class="ribbon">はやく うつほど ゴールに ちかづく！</p>
+      <div class="menu">
+        <button class="big btn-blue" data-go="league"><span class="ic">🏆</span><span class="tx"><b>ひとりで リーグせん</b><small>ちいきリーグ から ヨーロッパへ</small></span></button>
+        <button class="big btn-orange" data-go="online"><span class="ic">🤝</span><span class="tx"><b>みんなで たいせん</b><small>2〜4にん・1人1だいの パソコンで</small></span></button>
+        <button class="big btn-green" data-go="practice"><span class="ic">✏️</span><span class="tx"><b>れんしゅう</b><small>レベルを えらんで じっくり</small></span></button>
+      </div>
+      <div class="settings card">
+        <label class="set">おてほん
+          <select id="set-style">
+            <option value="hepburn">shi・chi・tsu</option>
+            <option value="kunrei">si・ti・tu</option>
+          </select>
+        </label>
+        <label class="set"><input type="checkbox" id="set-kb" checked> キーボード</label>
+        <label class="set"><input type="checkbox" id="set-sound" checked> おと</label>
+        <button class="link-btn" data-go="howto">あそびかた ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== リーグせん ========== -->
+  <section id="scr-league" class="screen">
+    <header class="bar"><button class="back" data-go="title">◀ もどる</button><h2>リーグせん</h2><span></span></header>
+    <p class="lead">かつと つぎの リーグに しょうかく！ めざせ ヨーロッパ！</p>
+    <div id="league-list" class="league-grid"></div>
+  </section>
+
+  <!-- ========== れんしゅう ========== -->
+  <section id="scr-practice" class="screen">
+    <header class="bar"><button class="back" data-go="title">◀ もどる</button><h2>れんしゅう</h2><span></span></header>
+    <p class="lead">レベルを えらんでね。あいては いないよ。</p>
+    <div id="practice-list" class="level-grid"></div>
+  </section>
+
+  <!-- ========== みんなで たいせん ========== -->
+  <section id="scr-online" class="screen">
+    <header class="bar"><button class="back" id="online-back">◀ もどる</button><h2>みんなで たいせん</h2><span></span></header>
+
+    <div id="on-join" class="panel">
+      <label class="field">なまえ（8もじまで）
+        <input id="on-name" maxlength="8" placeholder="れい：ゆうと" autocomplete="off">
+      </label>
+      <div class="join-row">
+        <div class="join-box">
+          <h3>🏟️ へやを つくる</h3>
+          <p>ばんごうが でるので ともだちに おしえてね</p>
+          <button class="big btn-orange" id="on-create"><span class="tx"><b>へやを つくる</b></span></button>
+        </div>
+        <div class="join-box">
+          <h3>🚪 へやに はいる</h3>
+          <input id="on-code" maxlength="4" inputmode="numeric" placeholder="4けたの ばんごう" autocomplete="off">
+          <button class="big btn-blue" id="on-join-btn"><span class="tx"><b>はいる</b></span></button>
+        </div>
+      </div>
+      <p id="on-msg" class="msg"></p>
+    </div>
+
+    <div id="on-lobby" class="panel hidden">
+      <div class="room-code"><span>へやばんごう</span><b id="lb-code">----</b></div>
+      <ul id="lb-players" class="players"></ul>
+      <div id="lb-host" class="host-box">
+        <div class="host-row">
+          <div><h3>レベル</h3><div id="lb-levels" class="chips"></div></div>
+          <div><h3>ディフェンス</h3><div id="lb-defs" class="chips"></div></div>
+        </div>
+        <button class="big btn-green wide" id="lb-start"><span class="tx"><b>キックオフ！</b></span></button>
+        <p class="sub-note" id="lb-start-note"></p>
+      </div>
+      <div id="lb-guest" class="guest-box">
+        <div class="wait-ball"></div>
+        <p>ホストが スタートするのを まってね</p>
+        <p id="lb-cfg" class="cfg"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== あそびかた ========== -->
+  <section id="scr-howto" class="screen">
+    <header class="bar"><button class="back" data-go="title">◀ もどる</button><h2>あそびかた</h2><span></span></header>
+    <div class="panel howto">
+      <ol class="steps">
+        <li><b>にほんご入力を オフ</b>にしてね（キーボードの「半角/全角」キー）。</li>
+        <li>がめんの ことばを <b>ローマじ</b>で うとう。あおい もじが つぎに おす キーだよ。</li>
+        <li>1つ うつと ドリブルで まえへ。2つ うつと <b>ディフェンスを ぬける</b>よ。</li>
+        <li>さいごの きいろい ことばが <b>シュート</b>！ うちおわると ゴール！</li>
+        <li>まちがえずに うつと <b>コンボ</b>が ふえて、ダッシュが はやく みえるよ。</li>
+      </ol>
+      <div class="howto-grid">
+        <div class="card-mini"><h3>🏆 リーグせん</h3><p>ちいきリーグ → けんリーグ → 関東リーグ → JFL → J3 → J2 → J1 → ヨーロッパリーグ。あいてより さきに ゴールしたら かち！</p></div>
+        <div class="card-mini"><h3>🤝 みんなで たいせん</h3><p>ひとり1だいの パソコンで あそぶよ。1人が「へやを つくる」、ほかの人は おなじ ばんごうで「はいる」。</p></div>
+        <div class="card-mini"><h3>🔤 ローマじの ヒント</h3><p>ん → nn ／ っ → つぎの もじを 2かい（kka）／ ー → マイナスキー ／ しゃ → sha でも sya でも OK</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== しあい ========== -->
+  <section id="scr-game" class="screen">
+    <header class="scoreboard">
+      <div class="sb-left">
+        <div id="hud-title" class="sb-title">しあい</div>
+        <div id="hud-bars" class="sb-bars"></div>
+      </div>
+      <div class="sb-time"><span id="hud-time">0.0</span><small>びょう</small></div>
+      <div class="sb-right"><button id="hud-quit" class="quit-btn">やめる</button></div>
+    </header>
+    <div class="adboard" aria-hidden="true"></div>
+    <div id="field-wrap"><canvas id="field"></canvas>
+      <div id="banner" class="banner hidden"></div>
+    </div>
+    <div id="play-area">
+      <div id="type-panel">
+        <div class="word-top">
+          <span id="w-cat" class="cat">用語</span>
+          <span id="w-combo" class="combo"></span>
+          <span id="w-step" class="step"></span>
+        </div>
+        <div id="w-text" class="w-text fit">サッカー</div>
+        <div id="w-yomi" class="w-yomi fit"></div>
+        <div id="w-roma" class="w-roma fit"></div>
+        <div class="w-bar"><i id="w-bar"></i></div>
+        <div id="w-next" class="w-next"></div>
+        <div id="ime-warn" class="ime-warn hidden">にほんご入力が オンかも！「半角/全角」キーで オフにしてね</div>
+      </div>
+      <div id="kb-wrap">
+        <div id="kb" class="kb"></div>
+        <div id="kb-finger" class="kb-finger"></div>
+      </div>
+    </div>
+    <div id="countdown" class="countdown hidden"></div>
+  </section>
+
+  <!-- ========== けっか ========== -->
+  <section id="scr-result" class="screen">
+    <div class="panel result">
+      <svg id="rs-trophy" class="trophy" viewBox="0 0 120 120" aria-hidden="true">
+        <defs><linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#f7b500"/><stop offset=".5" stop-color="#ffe680"/><stop offset="1" stop-color="#e09a00"/></linearGradient></defs>
+        <path d="M30 14 H90 V40 C90 64 76 76 60 78 C44 76 30 64 30 40 Z" fill="url(#gold)" stroke="#a86b00" stroke-width="3"/>
+        <path d="M30 22 H14 C14 44 24 52 34 54 M90 22 H106 C106 44 96 52 86 54" fill="none" stroke="#e0a100" stroke-width="7" stroke-linecap="round"/>
+        <rect x="52" y="78" width="16" height="16" fill="#e0a100"/>
+        <rect x="36" y="94" width="48" height="14" rx="4" fill="#5a3a12"/>
+        <polygon points="60,26 65,37 77,38 68,46 71,58 60,51 49,58 52,46 43,38 55,37" fill="#fff8d0"/>
+      </svg>
+      <h2 id="rs-title">ゴール！</h2>
+      <div id="rs-stars" class="stars"></div>
+      <p id="rs-sub"></p>
+      <ol id="rs-rank" class="rank"></ol>
+      <div class="stats">
+        <div><span>タイム</span><b id="rs-time">-</b></div>
+        <div><span>うったキー</span><b id="rs-keys">-</b></div>
+        <div><span>ミス</span><b id="rs-miss">-</b></div>
+        <div><span>せいかくさ</span><b id="rs-acc">-</b></div>
+        <div><span>1分の はやさ</span><b id="rs-kpm">-</b></div>
+        <div><span>さいだいコンボ</span><b id="rs-combo">-</b></div>
+      </div>
+      <div id="rs-badge" class="badge"></div>
+      <div class="rs-buttons">
+        <button class="big btn-green" id="rs-next"><span class="tx"><b>つぎの リーグへ ▶</b></span></button>
+        <button class="big btn-blue" id="rs-retry"><span class="tx"><b id="rs-retry-label">もういちど</b></span></button>
+        <button class="big btn-white" id="rs-menu"><span class="tx"><b>メニューへ</b></span></button>
+      </div>
+    </div>
+    <canvas id="confetti" aria-hidden="true"></canvas>
+  </section>
+</div>
+
+<script src="words.js"></script>
+<script src="romaji.js"></script>
+<script src="sfx.js"></script>
+<script src="match.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

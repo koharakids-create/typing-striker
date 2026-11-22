@@ -1,0 +1,18 @@
+name = "typing-striker"
+main = "src/worker.js"
+compatibility_date = "2025-06-01"
+
+# public/ の中身を そのまま 配信（HTML・JS・CSS）
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# オンライン対戦の「へや」（1へや = 1 Durable Object）
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "Room"
+
+# 無料プランでも使える SQLite 版 Durable Object
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room"]
