@@ -38,7 +38,7 @@ GitHub に置いて、Cloudflare Workers（無料プランで可）で公開し�
 | 上級 | 8〜10 | ペナルティエリア |
 | プロ級 | 11〜 | ビデオアシスタントレフェリー |
 
-### リーグ設定（`public/app.js` の `LEAGUES`）
+### リーグ設定（`app.js` の `LEAGUES`）
 
 | ステージ | レベル | DF人数 | 相手の速さ（かな/秒） |
 |---|---|---|---|
@@ -56,7 +56,7 @@ GitHub に置いて、Cloudflare Workers（無料プランで可）で公開し�
 
 ## ことばを増やす・変える
 
-`public/words.js` の `WORD_SOURCE` に1行ずつ追加するだけです。
+`words.js` の `WORD_SOURCE` に1行ずつ追加するだけです。
 
 ```
 # 選手（日本）           ← 「# 」で始まる行がカテゴリ名
@@ -71,7 +71,7 @@ GitHub に置いて、Cloudflare Workers（無料プランで可）で公開し�
 
 ### 1. GitHub にアップロード
 1. GitHub で新しいリポジトリ（例：`typing-striker`）を作成
-2. このフォルダの中身をすべてアップロード（`node_modules` は不要）
+2. このフォルダの中身をすべて、リポジトリのいちばん上にアップロード（`.assetsignore` も忘れずに。`node_modules` は不要）
 
 ### 2. Cloudflare につなぐ（おすすめ：Workers Builds）
 1. Cloudflare ダッシュボード →「Workers & Pages」→「作成」→「リポジトリをインポート」（Import a repository）
@@ -102,17 +102,18 @@ npm run dev      # http://localhost:8787 で起動（オンライン対戦も試
 ## ファイル構成
 
 ```
-public/          … 画面（そのまま配信される）
-  index.html     … 画面のレイアウト
-  style.css      … デザイン
-  words.js       … ことばデータベース（ここを編集して語を追加）
-  romaji.js      … ローマ字の判定（複数のつづりに対応）
-  match.js       … ピッチ・選手・ドリブル・シュートの描画
-  sfx.js         … 効果音（WebAudioで生成、音声ファイル不要）
-  app.js         … 画面遷移・リーグ・オンライン対戦の処理
-src/worker.js    … Cloudflare Worker と対戦部屋（Durable Object + WebSocket）
-wrangler.toml    … Cloudflare の設定
+index.html     … 画面のレイアウト
+style.css      … デザイン
+words.js       … ことばデータベース（ここを編集して語を追加）
+romaji.js      … ローマ字の判定（複数のつづりに対応）
+match.js       … ピッチ・選手・ドリブル・シュートの描画
+sfx.js         … 効果音（WebAudioで生成、音声ファイル不要）
+app.js         … 画面遷移・リーグ・オンライン対戦の処理
+worker.js      … Cloudflare Worker と対戦部屋（Durable Object + WebSocket）
+wrangler.toml  … Cloudflare の設定
+.assetsignore  … 配信しないファイルの一覧（消さないでください）
 ```
+すべてのファイルを **リポジトリのいちばん上** に置きます（フォルダは不要）。
 
 ## しくみメモ
 - オンライン対戦は、部屋番号ごとに Durable Object を1つ使い、WebSocket で進み具合を中継します。全員に同じ乱数の種（seed）を配るので、**全員に同じことばが同じ順番で出ます**。
